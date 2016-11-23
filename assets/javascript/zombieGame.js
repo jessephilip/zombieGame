@@ -15,7 +15,7 @@ function playerHealth() {
 
 //this function generates the amount of health a zombie will start out with
 function zombieHealth() {
-	return Math.floor(Math.random() * 15) + 10;
+	return Math.floor(Math.random() * 5) + 10;
 }
 
 // this function generates the id for the generated zombie
@@ -44,10 +44,9 @@ function prompt(zombie) {
 	inquirer.prompt([{
 		type: "list",
 		message: "Guess the id of the zombie attacking you:",
-		choices: ["1", "2", "3", "4", "5"],
+		choices: ["1", "2", "3", "4", "5", "stats"],
 		name: "guess"
 	}]).then(function (data) {
-		console.log(data.guess);
 		var power;
 
 		// if player's guess is equal to zombie's id number, damage zombie
@@ -55,6 +54,13 @@ function prompt(zombie) {
 			power = attack();
 			zombie.hp = zombie.hp - power;
 			console.log("Hit! You punched the zombie for " + power + "!");
+		} else if (data.guess == "stats") {
+			console.log("======================================================");
+			console.log("You take a moment to recollect yourself.");
+			console.log("Your HP is " + gameStats.playerHP + ".");
+			console.log(gameStats.killCount + " zombies have fallen by your hand.");
+			console.log("======================================================");
+
 		} else {
 			power = attack();
 			gameStats.playerHP = gameStats.playerHP - power;
@@ -72,11 +78,10 @@ function prompt(zombie) {
 			gameStats.killCount++;
 
 			// create a new zombie
-			zombie = createZombie();
+			gameStats.zombie = createZombie();
 			console.log("You killed that zombie, but another one has risen to take its place.");
 			prompt(gameStats.zombie);
-		}
-		else prompt(gameStats.zombie);
+		} else prompt(gameStats.zombie);
 
 	});
 }
@@ -84,9 +89,7 @@ function prompt(zombie) {
 // this function initializes the game by creating the player stats and first zombie
 function initialize() {
 	gameStats.playerHP = playerHealth();
-	console.log(gameStats.playerHP);
 	gameStats.zombie = createZombie();
-	console.log(gameStats.zombie);
 	console.log("A zombie has risen in your path");
 
 	prompt(gameStats.zombie);
@@ -95,11 +98,11 @@ function initialize() {
 
 // this function shows the gameover stats
 function gameOver() {
-	console.log("========================================");
-	console.log("You have fallen.");
-	console.log("You fought bravely and killed " + gameStats.killCount + "zombies.");
+	console.log("======================================================");
+	console.log("You have fallen and risen again as one of the horde.");
+	console.log("You fought bravely and killed " + gameStats.killCount + " zombies.");
 	console.log("But, in the end, the night takes us all.");
-	console.log("========================================");
+	console.log("======================================================");
 }
 
 // startup Code
