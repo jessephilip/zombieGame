@@ -5,7 +5,7 @@ var inquirer = require("inquirer");
 var gameStats = {
 	killCount: 0,
 	playerHP: 0,
-	zombie:
+	zombie: {}
 };
 
 // this function generates the amount of health the player will start out with
